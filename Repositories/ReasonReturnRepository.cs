@@ -17,9 +17,24 @@ namespace ProductShop.Repositories
             _context.ReasonsReturn.Add(reason);
         }
 
+        public async Task DeleteReasonReturn(ReasonReturn reason)
+        {
+            _context.ReasonsReturn.Remove(reason);
+        }
+
         public async Task<IEnumerable<ReasonReturn>> GetReasonReturnAsync()
         {
             return await _context.ReasonsReturn.ToListAsync();
+        }
+
+        public async Task<ReasonReturn?> GetReasonReturnByIdAsync(int id)
+        {
+            var reason = await _context.ReasonsReturn.FirstOrDefaultAsync(r => r.Id == id);
+            if (reason == null)
+            {
+                return null;
+            }
+            return reason;
         }
 
         public async Task<bool> SaveChangeAsync()

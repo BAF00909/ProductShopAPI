@@ -17,6 +17,11 @@ namespace ProductShop.Repositories
             _context.Products.Add(product);
         }
 
+        public async Task DeleteProductAsync(Product product)
+        {
+            _context.Products.Remove(product);
+        }
+
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             return await _context.Products.Include(p => p.ProductGroup).Include(p => p.Supply).FirstOrDefaultAsync(p => p.Id == id);

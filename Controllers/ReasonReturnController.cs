@@ -31,9 +31,14 @@ namespace ProductShop.Controllers
 
         // GET api/<ReasonReturnController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<ReasonReturnDto>> Get(int id)
         {
-            return "value";
+            var reason = await _repository.GetReasonReturnByIdAsync(id);
+            if (reason == null)
+            {
+                return NotFound("причина не найдена");
+            }
+            return Ok(_mapper.Map<ReasonReturnDto>(reason));
         }
 
         // POST api/<ReasonReturnController>
@@ -50,15 +55,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<ReasonReturnController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<ReasonReturnDto>> Put([FromBody] ReasonReturnDto reason)
         {
+            var currentReason = await _repository.GetReasonReturnByIdAsync(reason.Id);
+            if (currentReason == null)
+            {
+                return NotFound("Причина не найдена");
+            }
+            _mapper.Map(reason, currentReason);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<ReasonReturnDto>(currentReason));
         }
 
         // DELETE api/<ReasonReturnController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var reason = await _repository.GetReasonReturnByIdAsync(id);
+            if (reason == null)
+            {
+                return NotFound("Причина не найдена");
+            }
+            await _repository.DeleteReasonReturn(reason);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Причина удалена" });
         }
     }
 }

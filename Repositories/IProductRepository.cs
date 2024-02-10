@@ -9,5 +9,6 @@ namespace ProductShop.Repositories
         Task AddProductAsync(Product product);
         Task<IEnumerable<Product>> GetProductsAsync();
         Task<Product?> GetProductByIdAsync(int id);
+        Task DeleteProductAsync(Product product);
     }
 }

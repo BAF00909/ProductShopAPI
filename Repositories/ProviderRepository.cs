@@ -17,6 +17,21 @@ namespace ProductShop.Repositories
             _context.Providers.Add(provider);
         }
 
+        public async Task DeleteProviderAsync(Provider provider)
+        {
+            _context.Providers.Remove(provider);
+        }
+
+        public async Task<Provider?> GetProviderByIdAsync(int id)
+        {
+            var provider = await _context.Providers.FirstOrDefaultAsync(p => p.Id == id);
+            if (provider == null)
+            {
+                return null;
+            }
+            return provider;
+        }
+
         public async Task<IEnumerable<Provider>> GetProvidersAsync()
         {
             return await _context.Providers.ToListAsync();

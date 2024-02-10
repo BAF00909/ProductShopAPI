@@ -8,6 +8,7 @@ namespace ProductShop.Profiles
         {
             CreateMap<Models.ProviderCreateDto, Entities.Provider>();
             CreateMap<Entities.Provider, Models.ProviderDto>();
+            CreateMap<Models.ProviderDto, Entities.Provider>();
         }
     }
 }

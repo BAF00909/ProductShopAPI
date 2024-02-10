@@ -9,6 +9,7 @@ namespace ProductShop.Profiles
             CreateMap<Models.ProductCreateDto, Entities.Product>();
             CreateMap<Entities.Product, Models.ProductDto>();
             CreateMap<Models.ProductDto, Entities.Product>();
+            CreateMap<Models.ProductUpdateDto, Entities.Product>();
         }
     }
 }

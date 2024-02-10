@@ -55,15 +55,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<ProductDto>> Put([FromBody] ProductUpdateDto product)
         {
+            var currentProduct = await _repository.GetProductByIdAsync(product.Id);
+            if (currentProduct == null)
+            {
+                return NotFound("Продукт не найден");
+            }
+            _mapper.Map(product, currentProduct);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<ProductDto>(currentProduct));
         }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var product = await _repository.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound("Продукт не найден");
+            }
+            await _repository.DeleteProductAsync(product);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Продукт удален" });
         }
     }
 }

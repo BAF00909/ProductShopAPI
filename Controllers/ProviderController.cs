@@ -31,9 +31,14 @@ namespace ProductShop.Controllers
 
         // GET api/<ProviderController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<ProviderDto>> Get(int id)
         {
-            return "value";
+            var provider = await _repository.GetProviderByIdAsync(id);
+            if (provider == null)
+            {
+                return NotFound("Провайдер не найден");
+            }
+            return Ok(_mapper.Map<ProviderDto>(provider));
         }
 
         // POST api/<ProviderController>
@@ -50,15 +55,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<ProviderController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<ProviderDto>> Put([FromBody] ProviderDto provider)
         {
+            var currentProvider = await _repository.GetProviderByIdAsync(provider.Id);
+            if (currentProvider == null)
+            {
+                return NotFound("Поставщик не найден");
+            }
+            _mapper.Map(provider, currentProvider);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<ProviderDto>(currentProvider));
         }
 
         // DELETE api/<ProviderController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var provider = await _repository.GetProviderByIdAsync(id);
+            if(provider == null)
+            {
+                return NotFound("Поставщик не найден");
+            }
+            await _repository.DeleteProviderAsync(provider);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Поставщик удален" });
         }
     }
 }

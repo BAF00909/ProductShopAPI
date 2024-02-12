@@ -8,6 +8,7 @@ namespace ProductShop.Profiles
         {
             CreateMap<Models.SoltProductCreateDto, Entities.SoltProduct>();
             CreateMap<Entities.SoltProduct, Models.SoltProductDto>();
+            CreateMap<Models.SoltProductUpdateDto, Entities.SoltProduct>();
         }
     }
 }

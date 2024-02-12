@@ -8,5 +8,7 @@ namespace ProductShop.Repositories
         Task<bool> SaveChangeAsync();
         Task AddReturndeProductAsync(ReturnedProduct product);
         Task<IEnumerable<ReturnedProduct>> GetReturnedProductAsync();
+        Task<ReturnedProduct?> GetReturnedProductByIdAsync(int id);
+        Task DeleteReturnedProductAsync(ReturnedProduct product);
     }
 }

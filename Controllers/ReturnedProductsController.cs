@@ -35,9 +35,14 @@ namespace ProductShop.Controllers
 
         // GET api/<ReturnedProductsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<ReturnedProductDto>> Get(int id)
         {
-            return "value";
+            var product = await _repository.GetReturnedProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound("Возврат не найден");
+            }
+            return Ok(_mapper.Map<ReturnedProductDto>(product));
         }
 
         // POST api/<ReturnedProductsController>
@@ -54,15 +59,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<ReturnedProductsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<ReturnedProductDto>> Put([FromBody] ReturnedProductUpdateDto product)
         {
+            var currentProduct = await _repository.GetReturnedProductByIdAsync(product.Id);
+            if (currentProduct == null)
+            {
+                return NotFound("Возврат не найден");
+            }
+            _mapper.Map(product, currentProduct);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<ReturnedProductDto>(currentProduct));
         }
 
         // DELETE api/<ReturnedProductsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var product = await _repository.GetReturnedProductByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound("Возврат не найден");
+            }
+            await _repository.DeleteReturnedProductAsync(product);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Возврат удален" });
         }
     }
 }

@@ -16,6 +16,21 @@ namespace ProductShop.Repositories
             _context.SoltProducts.Add(product);
         }
 
+        public async Task DeleteSoltProductAsync(SoltProduct product)
+        {
+            _context.SoltProducts.Remove(product);
+        }
+
+        public async Task<SoltProduct?> GetSoltProductByIdAsync(int id)
+        {
+            var soltProduct = await _context.SoltProducts.Include(s => s.Product).Include(s => s.Employee).FirstOrDefaultAsync(s => s.Id == id);
+            if (soltProduct == null)
+            {
+                return null;
+            }
+            return soltProduct;
+        }
+
         public async Task<IEnumerable<SoltProduct>> GetSoltProductsAsync()
         {
             return await _context.SoltProducts.Include(p => p.Product).Include(p => p.Employee).ToListAsync();

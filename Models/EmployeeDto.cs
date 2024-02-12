@@ -13,9 +13,9 @@ namespace ProductShop.Models
             get => $"{LastName} {FirstName} {SecondName}";
             set => FullName = value;
         }
-        public DateTime Birthday { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime FinishDate { get; set; }
+        public DateOnly Birthday { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly FinishDate { get; set; }
         public Position Position { get; set; }
     }
 }

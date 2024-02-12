@@ -31,9 +31,14 @@ namespace ProductShop.Controllers
 
         // GET api/<SoltProductsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<SoltProductDto>> Get(int id)
         {
-            return "value";
+            var soltProduct = await _repository.GetSoltProductByIdAsync(id);
+            if (soltProduct == null)
+            {
+                return NotFound("Продажа не найдена");
+            }
+            return Ok(_mapper.Map<SoltProductDto>(soltProduct));
         }
 
         // POST api/<SoltProductsController>
@@ -50,15 +55,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<SoltProductsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<SoltProductDto>> Put([FromBody] SoltProductUpdateDto soltProduct)
         {
+            var currentSoltProduct = await _repository.GetSoltProductByIdAsync(soltProduct.Id);
+            if (currentSoltProduct == null)
+            {
+                return NotFound("Продажа не найдена");
+            }
+            _mapper.Map(soltProduct, currentSoltProduct);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<SoltProductDto>(currentSoltProduct));
         }
 
         // DELETE api/<SoltProductsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var soltProduct = await _repository.GetSoltProductByIdAsync(id);
+            if (soltProduct == null)
+            {
+                return NotFound("Продажа не найдена");
+            }
+            await _repository.DeleteSoltProductAsync(soltProduct);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Продажа удалена" });
         }
     }
 }

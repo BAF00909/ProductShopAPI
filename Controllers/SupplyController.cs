@@ -31,9 +31,14 @@ namespace ProductShop.Controllers
 
         // GET api/<SupplyController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<SupplyDto>> Get(int id)
         {
-            return "value";
+            var supply = await _repository.GetsuplyByIdAsync(id);
+            if (supply == null)
+            {
+                return NotFound("Доставка не найдена");
+            }
+            return Ok(_mapper.Map<SupplyDto>(supply));
         }
 
         // POST api/<SupplyController>
@@ -50,15 +55,31 @@ namespace ProductShop.Controllers
         }
 
         // PUT api/<SupplyController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<SupplyDto>> Put([FromBody] SupplyUpdateDto supply)
         {
+            var currentSupply = await _repository.GetsuplyByIdAsync(supply.Id);
+            if (currentSupply == null)
+            {
+                return NotFound("Доставка не найдена");
+            }
+            _mapper.Map(supply, currentSupply);
+            await _repository.SaveChangeAsync();
+            return Ok(_mapper.Map<SupplyDto>(currentSupply));
         }
 
         // DELETE api/<SupplyController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var supply = await _repository.GetsuplyByIdAsync(id);
+            if (supply == null)
+            {
+                return NotFound("Доставка не найдена");
+            }
+            await _repository.DeleteSupplyAsync(supply);
+            await _repository.SaveChangeAsync();
+            return Ok(new { message = "Доставка удалена" });
         }
     }
 }

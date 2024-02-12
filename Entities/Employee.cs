@@ -12,9 +12,9 @@ namespace ProductShop.Entities
         public string SecondName {  get; set; } = string.Empty;
         [Required]
         public string LastName { get; set; } = string.Empty;
-        public DateTime Birthday { get; set; }
-        public DateTime StartDate { get; set; } = new DateTime();
-        public DateTime? FinishDate { get; set;}
+        public DateOnly Birthday { get; set; }
+        public DateOnly StartDate { get; set; } = new DateOnly();
+        public DateOnly? FinishDate { get; set;}
         [ForeignKey("PositionId")]
         public Position Position { get; set; } = null!;
         [Required]

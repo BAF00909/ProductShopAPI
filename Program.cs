@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductShop.DBContexts;
 using ProductShop.Repositories;
 using Serilog;
+using System.Security.Authentication;
 
 namespace ProductShop
 {
@@ -17,6 +18,15 @@ namespace ProductShop
                 .CreateLogger();
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.UseSerilog();
+
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ConfigureHttpsDefaults(listenOptions =>
+                {
+                    listenOptions.SslProtocols = SslProtocols.Tls13;
+                });
+            });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("localhostPolicy", policy => { 

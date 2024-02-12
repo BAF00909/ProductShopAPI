@@ -7,5 +7,7 @@ namespace ProductShop.Repositories
         Task<bool> SaveChangeAsync();
         Task<IEnumerable<SoltProduct>> GetSoltProductsAsync();
         Task AddSoltProductAsync(SoltProduct product);
+        Task<SoltProduct?> GetSoltProductByIdAsync(int id);
+        Task DeleteSoltProductAsync(SoltProduct product);
     }
 }

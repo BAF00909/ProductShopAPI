@@ -7,5 +7,7 @@ namespace ProductShop.Repositories
         Task<bool> SaveChangeAsync();
         Task AddSupplyAsync(Supply supply);
         Task<IEnumerable<Supply>> GetSuppliesAsync();
+        Task<Supply?> GetsuplyByIdAsync(int id);
+        Task DeleteSupplyAsync(Supply supply);
     }
 }

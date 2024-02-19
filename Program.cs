@@ -73,9 +73,12 @@ namespace ProductShop
                 endpoints.MapControllers();
             });
             //app.MapControllers();
-            app.UseStaticFiles();
-            app.UseDefaultFiles("/index.html");
+            var options = new DefaultFilesOptions();
+            options.DefaultFileNames.Clear();
+            options.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(options);
 
+            app.UseStaticFiles();
             app.Run();
         }
     }

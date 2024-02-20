@@ -2,6 +2,7 @@
 using ProductShop.DBContexts;
 using ProductShop.Entities;
 using ProductShop.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductShop.Repositories
 {
@@ -25,16 +26,19 @@ namespace ProductShop.Repositories
         public async Task<IEnumerable<ReturnedProduct>> GetReturnedProductAsync()
         {
             return await _context.ReturnedProducts
+                .Include(p => p.Employee)
                 .Include(p => p.ReasonReturn)
-                .Include(p => p.SoltProduct).Include(p => p.Employee).ToListAsync();
+                .Include(p => p.SoltProduct).ThenInclude(rp => rp.Product)
+                .Include(p => p.SoltProduct).ThenInclude(rp => rp.Employee)
+                .ToListAsync();
         }
 
         public async Task<ReturnedProduct?> GetReturnedProductByIdAsync(int id)
         {
-            var product =  await _context.ReturnedProducts
-                .Include(p => p.ReasonReturn)
-                .Include(p => p.Employee)
-                .Include(p => p.SoltProduct)
+            var product = await _context.ReturnedProducts
+                .Include(r => r.ReasonReturn)
+                .Include(r => r.Employee).ThenInclude(e => e.Position)
+                .Include(r => r.SoltProduct).ThenInclude(rp => rp.Product)
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {

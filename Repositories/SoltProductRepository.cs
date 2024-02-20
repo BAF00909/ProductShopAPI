@@ -23,7 +23,10 @@ namespace ProductShop.Repositories
 
         public async Task<SoltProduct?> GetSoltProductByIdAsync(int id)
         {
-            var soltProduct = await _context.SoltProducts.Include(s => s.Product).Include(s => s.Employee).FirstOrDefaultAsync(s => s.Id == id);
+            var soltProduct = await _context.SoltProducts
+                .Include(s => s.Product)
+                .Include(s => s.Employee)
+                .FirstOrDefaultAsync(s => s.Id == id);
             if (soltProduct == null)
             {
                 return null;

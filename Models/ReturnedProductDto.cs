@@ -1,5 +1,4 @@
 ﻿using ProductShop.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductShop.Models
 {

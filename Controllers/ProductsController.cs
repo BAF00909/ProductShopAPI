@@ -23,9 +23,13 @@ namespace ProductShop.Controllers
         }
         // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> Get()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> Get(
+            [FromQuery] int? id, int? art, string? productName, DateTime? dateIn, int? count, decimal? cost, int? productGroupId, int? supplyId
+            )
         {
-            var products = await _repository.GetProductsAsync();
+            var products = await _repository.GetProductsAsync(
+                id, art, productName, dateIn, count, cost, productGroupId, supplyId
+                );
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
         }
 
@@ -47,7 +51,7 @@ namespace ProductShop.Controllers
         {
             var newProduct = _mapper.Map<Product>(product);
             await _repository.AddProductAsync(newProduct);
-            if(!await _repository.SaveChangeAsync())
+            if (!await _repository.SaveChangeAsync())
             {
                 return BadRequest();
             }

@@ -27,9 +27,49 @@ namespace ProductShop.Repositories
             return await _context.Products.Include(p => p.ProductGroup).Include(p => p.Supply).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
+        public async Task<IQueryable<Product>> GetProductsAsync(
+            int? id = null, int? art = null, string? productName = null,
+            DateTime? dateIn = null, int? count = null, decimal? cost = null,
+            int? productGroupId = null, int? supplyId = null
+            )
         {
-            return await _context.Products.Include(p => p.ProductGroup).Include(p => p.Supply).ToListAsync();
+            var result = _context.Products
+                .Include(p => p.ProductGroup)
+                .Include(p => p.Supply).AsQueryable();
+            if(id.HasValue)
+            {
+                result = result.Where(p => p.Id == id);
+            }
+            if (art.HasValue)
+            {
+                result = result.Where(p => p.Art == art);
+            }
+            if (!string.IsNullOrEmpty(productName))
+            {
+                result = result.Where(p => p.ProductName == productName);
+            }
+            if (dateIn.HasValue)
+            {
+                result = result.Where(p => p.DateIn == dateIn);
+            }
+            if (count.HasValue)
+            {
+                result = result.Where(p => p.Count == count);
+            }
+            if (cost.HasValue)
+            {
+                result = result.Where(p => p.Cost == cost);
+            }
+            if (productGroupId.HasValue)
+            {
+                result = result.Where(p => p.ProductGroupId == productGroupId);
+            }
+            if (supplyId.HasValue)
+            {
+                result = result.Where(p => p.SupplyId == supplyId);
+            }
+
+            return result;
         }
 
         public async Task<bool> SaveChangeAsync()

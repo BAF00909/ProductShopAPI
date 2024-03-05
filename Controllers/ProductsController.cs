@@ -24,11 +24,11 @@ namespace ProductShop.Controllers
         // GET: api/<ProductsController>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> Get(
-            [FromQuery] int? id, int? art, string? productName, DateTime? dateIn, int? count, decimal? cost, int? productGroupId, int? supplyId
+            [FromQuery] int? id, int? art, string? productName, DateTime? dateInStart, DateTime? dateInFinish, int? count, decimal? cost, int? productGroupId, int? supplyId
             )
         {
             var products = await _repository.GetProductsAsync(
-                id, art, productName, dateIn, count, cost, productGroupId, supplyId
+                id, art, productName, dateInStart, dateInFinish, count, cost, productGroupId, supplyId
                 );
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(products));
         }

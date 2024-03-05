@@ -29,7 +29,7 @@ namespace ProductShop.Repositories
 
         public async Task<IQueryable<Product>> GetProductsAsync(
             int? id = null, int? art = null, string? productName = null,
-            DateTime? dateIn = null, int? count = null, decimal? cost = null,
+            DateTime? dateInStart = null, DateTime? dateInFinish = null, int? count = null, decimal? cost = null,
             int? productGroupId = null, int? supplyId = null
             )
         {
@@ -48,9 +48,13 @@ namespace ProductShop.Repositories
             {
                 result = result.Where(p => p.ProductName == productName);
             }
-            if (dateIn.HasValue)
+            if (dateInStart.HasValue)
             {
-                result = result.Where(p => p.DateIn == dateIn);
+                result = result.Where(p => p.DateIn >= dateInStart);
+            }
+            if (dateInFinish.HasValue)
+            {
+                result = result.Where(p => p.DateIn <= dateInFinish);
             }
             if (count.HasValue)
             {
